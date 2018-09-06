@@ -3,3 +3,5 @@ label: default
 hide_body: false
 is_partial: false
 fields: []
+pages:
+- _posts/testing-jekyll-and-forestry.md
