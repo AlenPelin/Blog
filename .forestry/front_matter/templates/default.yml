@@ -2,6 +2,16 @@
 label: default
 hide_body: false
 is_partial: false
-fields: []
+fields:
+- type: text
+  default: post
+  name: layout
+  config:
+    required: true
+  hidden: true
+- type: text
+  name: title
+  config:
+    required: true
 pages:
 - _posts/testing-jekyll-and-forestry.md
