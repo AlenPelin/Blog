@@ -6,14 +6,14 @@ pygments:         true
 permalink:        pretty
 
 # Setup
-title:            Hyde
-tagline:          'A Jekyll theme'
-description:      'A brazen two-column <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that pairs a prominent sidebar with uncomplicated content. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.'
-url:              http://hyde.getpoole.com
+title:            Alen Pelin
+tagline:          'Blog'
+description:      'Brief Sitecore blog by Alen Pelin'
+url:              http://alenpelin.com
 
 author:
-  name:           'Mark Otto'
-  url:            https://twitter.com/mdo
+  name:           'Alen Pelin'
+  url:            https://twitter.com/alenpelin
 
 paginate:         5
 
