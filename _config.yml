@@ -8,7 +8,7 @@ permalink:        pretty
 # Setup
 title:            Alen Pelin
 tagline:          'Blog'
-description:      'Brief Sitecore blog by Alen Pelin'
+description:      'Brief Sitecore blog'
 url:              http://alenpelin.com
 
 author:
@@ -16,9 +16,3 @@ author:
   url:            https://twitter.com/alenpelin
 
 paginate:         5
-
-# Custom vars
-version:          2.0.0
-
-github:
-  repo:           https://github.com/poole/hyde

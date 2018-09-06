@@ -1,11 +1,11 @@
 ---
 layout: post
-title: AutoScheduleSmartPublish
+title: Don't get surprised by automatic publish
 ---
 
-# 1. Publishing.AutoScheduleSmartPublish
-
-From the very old versions Sitecore had the `Publishing.AutoScheduleSmartPublish` setting that when enabled makes publish engine to trigger full site smart publish when specific item is changed - based on defined template. By default, this setting is on and configured this way:
+It came to us from the dark times when Sitecore was young and developers were brave.
+In fact, it was decided that once one of the *special* items is modified the engine must start a publishing process immediately.
+There were only a few types of these items, and these types were defined as follows:
 
 ```xml
 <!-- PUBLISHING -->
@@ -18,4 +18,5 @@ From the very old versions Sitecore had the `Publishing.AutoScheduleSmartPublish
 </publishing>
 ```
 
-This is a good idea to switch this setting off when you don't want any unwanted publish happen.
+Luckily, as many other great things in Sitecore, this one can be disabled via `Publishing.AutoScheduleSmartPublish` setting.
+This might be a good idea to switch it off in any case.
