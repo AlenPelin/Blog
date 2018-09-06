@@ -14,4 +14,4 @@ fields:
   config:
     required: true
 pages:
-- _posts/testing-jekyll-and-forestry.md
+- _posts/2018-09-06-testing-jekyll-and-forestry.md
