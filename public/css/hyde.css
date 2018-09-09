@@ -134,11 +134,9 @@ a.sidebar-nav-item:focus {
   }
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 58rem) {
   .content {
-    max-width: 38rem;
-    margin-left: 20rem;
-    margin-right: 2rem;
+    max-width: 48rem;
   }
 }
 
