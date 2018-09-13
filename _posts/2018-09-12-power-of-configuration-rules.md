@@ -5,8 +5,8 @@ layout: post
 
 ## TL;DR;
 
-Scroll down to [Environment Rules](#environment-rules) section that takes you through
-`env:define/:require` and `whatever:/whatever:require` configuration out of
+Scroll down to [Environment Rules](#environment-rules) section that takes you 
+through `env:define/:require` and `whatever:/:require` configuration out of
 the box extensions.  
 
 ## Intro
@@ -39,7 +39,9 @@ The most typical developer's challenge was to understand the main concept
 itself that application may need more than one working instance at a time, and
 how to `switch master to web`. 
 
-As Sitecore product was getting maturer the demand on splitting system into smaller chunks was growing even faster. Until `Sitecore 7.5` there were two main roles that and two optional:
+As Sitecore product was getting maturer the demand on splitting system into 
+smaller chunks was growing even faster. Until `Sitecore 7.5` there were two 
+main roles that and two optional:
 
 * `Dedicated Publishing`
 * `Dedicated Email Dispatch` (for optional ECM/EXM module)
@@ -47,7 +49,8 @@ As Sitecore product was getting maturer the demand on splitting system into smal
 While `Sitecore 7.5` didn't get any major popularity, it was compensated by
 `Sitecore 8.0` that flipped Sitecore world and made developers struggle with
 enormous, overdetailed and often inconsistent documentation of converting
-`Standalone` Sitecore instance type (which was preconfigured in distribution package with no other options) into one of following roles:
+`Standalone` Sitecore instance type (which was preconfigured in distribution
+package with no other options) into one of following roles:
 
 * `Content Management aka CM`
 * `Processing`
@@ -68,9 +71,9 @@ Thanks to small initiative group with people from Sitecore Ukraine and Sitecore
 Australia, `Sitecore 8.2.3` was released with unblocked configuration engine
 that allowed to implement prototype
 [Sitecore-Configuration-Roles](//github.com/alenpelin/sitecore-configuration-roles)
-that extended default XML namespaces of Sitecore configuration with new one that
-allowed annotating independent configuration elements with instructions when to
-enable or disable them.
+that extended default XML namespaces of Sitecore configuration with new one 
+that allowed annotating independent configuration elements with instructions 
+when to enable or disable them.
 
 ```xml
 <configuration xmlns:role="http://www.sitecore.net/xmlconfig/role">
@@ -94,20 +97,23 @@ There were a couple of key aspects that brought the project to success:
 
 Followed by success of 
 [Sitecore-Configuration-Roles](//github.com/alenpelin/sitecore-configuration-roles)
-the initiative group acquired the prototype implementation and improved it, making
-it even more helpful with generalized extensible configuration rules engine which is explained in 
+the initiative group acquired the prototype implementation and improved it, 
+making it even more helpful with generalized extensible configuration rules 
+engine which is explained in
 [official documentation](//doc.sitecore.net/sitecore_experience_platform/developing/developing_with_sitecore/customizing_server_configuration/use_a_rulebased_configuration). Out of the
 box Sitecore offers several important features:
 
-* `role` in the very similar manner with configuration files annotated by default
-* `search` provider which makes switching from Solr to Azure search in 5 keystrokes
-* `exmEnable` lets switching EXM systems off when they are not required 
-* `env` for environment pattern that lets replace MSBuild config transforms,
-  or at least limit their usage only to the `web.config` file.
+* Same `role` as before with all configuration files annotated by default
+* Extra `search` and `exmEnable` to switch search provider and disable EXM
+* Concept of `env` environment rules that lets replace MSBuild config 
+  transforms, or at least limit their usage only to the `web.config` file.
 
-I'd like to talk more about `env:define` which terribly lacks documentation
-(unlike two more other more obvious options), but first let's talk about mechanics
-of the rule based config reader which is defined as follows:
+
+While it's crystal clear of how to use first three options from common sense, 
+official documentation and the prototype's readme file, the last but not least
+`env:define` concept unfortunately lacks any info sources. Jump to 
+[Environment Rules](#environment-rules) section if you cannot wait, but it's 
+better go discuss the mechanics of the rule based config reader first:
 
 ```xml
 <configuration>
@@ -117,42 +123,50 @@ of the rule based config reader which is defined as follows:
       type="Sitecore.Configuration.RuleBasedConfigReader, Sitecore.Kernel" />
  ```
 
-The logic of the system is straightforward:
+The logic of engine is fairly straightforward:
 
 1.  During website startup stage, create a matrix of defined categories of rules:  
-      Check ASP.NET configuration for app settings in the given format:
-      ```xml
-      <configuration>
-        <appSettings>
-          <add name="banana:defined" value="african, american, australian"/>
-          <add name="bird:defined" value="cockatoo|penguin"/>
-          ...
-      ```
-      and form the in-memory dictionary of the following type:
-      ```json
-      {
-        "banana": [ "african",  "american", "australian" ],
-        "bird":   [ "cockatoo", "penguin",               ],
-      }
-      ```
-2.  Extract `<sitecore>` node from ASP.NET configuration and merge config files
-    from `App_Config` sub-folders according to `App_Config/Layout.config` file. 
-
-    By default, the order looks like that:
     
-    * `App_Config\Sitecore` (non-alphabetically, according to `Layouts.config`)
+    Check ASP.NET configuration for app settings in the given format:
+    
+    ```xml
+    <configuration>
+      <appSettings>
+        <add name="banana:defined" value="african, american, australian"/>
+        <add name="bird:defined" value="cockatoo|penguin"/>
+        ...
+    ```
+    
+    and build in-memory dictionary of the following kind:
+    
+    ```json
+    {
+      "banana": [ "african",  "american", "australian" ],
+      "bird":   [ "cockatoo", "penguin",               ],
+    }
+    ```
+    
+2.  Extract `<sitecore>` node from ASP.NET configuration and merge patch files
+    into it, sourcing `App_Config` contents according to the order defined in
+    the `App_Config/Layout.config` file. 
+
+    By default, it's almost driven by common sense:
+    
+    * `App_Config\Sitecore` (non-alphabetically, check `Layouts.config`)
     * `App_Config\Modules` (alphabetically)
     * `App_Config\Include` (alphabetically)
     * `App_Config\Environment` (alphabetically)
   
 3.  When recursively processing XML elements of particular `*.config` file, 
-    check attributes for presence of `required` with XML namespace that follows the `http://www.sitecore.net/xmlconfig/KEYWORD/` pattern. If any of the rules
-    fails, entire XML element with children is skipped. 
+    check attributes for presence of `required` with XML namespace that follows
+    the `http://www.sitecore.net/xmlconfig/KEYWORD/` pattern. If any of the
+    rules fails, the entire XML element with children is skipped. 
 
-    Rule evaluation logic is simple: all defined tokens are replaced with `true`
-    and the rest words - with `false`, and then expression is evaluated. 
+    Rule evaluation code is simple: all defined tokens are replaced with `true`
+    and the rest unknown words - with `false`, and then boolean expression is 
+    being evaluated. 
 
-    In accordance with banana-bird sample above, only <C> element will survive:
+    In accordance with banana-bird sample above, only `C` element will survive:
     
     ```xml
     <configuration 
@@ -165,7 +179,8 @@ The logic of the system is straightforward:
         <C banana:require="african" horse:require="cockatoo"/>
     ```
 
-    **Important!** Even though it is a good practice to have namespace prefix match last word in actual schema URL, **technically it is not enforced**. 
+    **Important!** Even though it is a good practice to have the namespace prefix
+    matching last word in the schema URL, but **technically it is not enforced**. 
     
     So in this sample `horse:` works with `bird:define` because of the appropriate
     namespace declaration: `xmlns:horse="http://www.sitecore.net/xmlconfig/bird/"`
@@ -213,19 +228,51 @@ The list will be extended with your samples, current set is:
 * MailServer localhost or SendGrid
 * [FridayCore](//github.com/alenpelin/FridayCore) features
 
-There are things that probably shouldn't be controlled with configuration rules:
+Let's talk about benefits of configuration rules engine over traditional 
+transformation files:
+    
+* Having single set of configuration files make it absolutely easy to make 
+  deployments: copy entire `App_Config` sub-folders and it's all done. 
+  This makes deployments reliable and also leave little room for mistakes
+  like deploying when MyPatchFile.Debug.config to production.
+  
+  In addition to that, it is also easy to see difference between Sitecore
+  instance when troubleshooting - there is no need to use file comparison
+  software to see the difference between two or more sets of files because
+  rules are in fact the diff itself.
+    
+* Transformation files usually are executed at the compile time, which makes
+  preparing 4 sets of deployment packages (CM, CD, PR, RE) 4 times longer.
+    
+* Rules unlock extraordinary flexibility by combining identical transforms 
+  for different environments into single block with `env:require` rule which
+  naturally complies with DRY.  
+    
+* While transforming the `web.config` file is super easy thanks to great 
+  Visual Studio tooling, it can be tricky to do the same for other files. 
 
-* `Credentials, Keys and Tokens` - keep them in safe encrypted place 
-  (like Azure KeyVault), or at least in MSBuild transforms so accessing UAT won't
-  compromise PROD keys.
+## Security
+    
+While it was never good idea to store passwords and tokens in unencrypted 
+configuration files, having configuration rules engine makes it even more 
+important, because in this case compromising one set of config files
+compromises credentials for all environments. That's why it is critical to
+use right vault for storing sensitive data.
 
-In fact, there is not much difference between 
+Sceptics might think that having access to configuration files is already
+terrible enough (which indeed makes some sense), but in security is so much
+more complex subject than 'good or bad', there are different layers and 
+there could be different consequences for breaching different layers.
 
-Google advises that this technique is not new and people were blogging about same thing about a year ago:
+## References   
+ 
+The proposed approach works with `Sitecore 9.0.0` or later, which means it's
+about a year old tech. Google advises there were several blog posts describing
+nearly same thing soon after public launch of that release in October 2017:
 
 * [Sitecore 9 : Custom Config Roles](https://jammykam.wordpress.com/2017/11/01/sitecore-9-custom-config-roles/)
 * [A Practical Approach to Structuring Sitecore 9 Config Files](https://www.degdigital.com/insights/sitecore-9-config-files/)
 * [Getting rid of transformations, allow the same build to run in any environment](https://blogg.knowit.se/experience-se/getting-rid-of-transformations)
 
-Apart from that, author managed to chat with several other people who confirmed
-Sitecore solutions that successfully went live with this concept.
+Apart from that, author managed to get private conversations with group of MVPs
+who used similar technique in recent successful projects.
