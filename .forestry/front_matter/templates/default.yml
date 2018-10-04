@@ -14,5 +14,5 @@ fields:
   config:
     required: true
 pages:
-- _posts/power-of-configuration-rules.md
+- _posts/2018-09-13-power-of-configuration-rules.md
 - _posts/2018-09-06-testing-jekyll-and-forestry.md
