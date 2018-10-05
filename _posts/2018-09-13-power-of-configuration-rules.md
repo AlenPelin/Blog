@@ -6,7 +6,7 @@ date: 2018-09-13 10:40:15 +0000
 ---
 ## TL;DR;
 
-Scroll down to [Environment Rules](#environment-rules) section that takes you through `env:define/:require` and `whatever:/:require` configuration out of the box extensions.
+Scroll down to [Environment Rules](#environment-rules) section that takes you through `env:define/:require` and `whatever:define/:require` configuration out of the box extensions.
 
 ## Intro
 
