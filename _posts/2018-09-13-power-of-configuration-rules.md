@@ -180,7 +180,7 @@ Sceptics might think that having access to configuration files is already terrib
 
 ## Examples
 
-> To be updated with my current setup using web.config transform for octopus variables.
+> To be updated with current setup using web.config transform for octopus variables.
 
 ## References
 
